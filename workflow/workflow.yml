@@ -1,0 +1,797 @@
+assistants:
+  - id: assistant_1
+    assistant_id: 4b9955e1-3e46-40f6-ba66-0e9fd1ce7eb6
+  - id: assistant_2
+    assistant_id: d3a9867b-0666-4a06-aecd-b3c6fe0416e8
+  - id: assistant_3
+    assistant_id: 249d5d49-fe79-4e1b-94c6-7f727759e4a1
+  - id: assistant_4
+    assistant_id: bc7fcd9a-f373-4396-9328-6d892817ad07
+  - id: assistant_5
+    assistant_id: 3f330bc4-7ec2-4eb2-b278-fa7982508a38
+  - id: assistant_6
+    assistant_id: 1daf68e2-c65d-4354-ab9a-7283c6379499
+  - id: assistant_7
+    assistant_id: 4628e708-8a1e-4991-ac53-bfb899b79a91
+  - id: assistant_8
+    assistant_id: 1daf68e2-c65d-4354-ab9a-7283c6379499
+  - id: assistant_9
+    assistant_id: 4628e708-8a1e-4991-ac53-bfb899b79a91
+  - id: assistant_10
+    assistant_id: 4628e708-8a1e-4991-ac53-bfb899b79a91
+  - id: assistant_11
+    assistant_id: 4628e708-8a1e-4991-ac53-bfb899b79a91
+
+custom_nodes: []
+
+states:
+  - id: BA_ANALYSIS
+    assistant_id: assistant_1
+    next:
+      state_id: REQUIREMENTS
+    task: |-
+      Perform the Business Analysis phase of the AI-SDLC workflow.
+
+      Analyze the user's original business request and the available project
+      context.
+
+      Produce:
+      1. Business problem
+      2. Business objective
+      3. Users/personas affected
+      4. Current behavior
+      5. Proposed enhancement
+      6. MVP scope
+      7. Out-of-scope items
+      8. Risks
+      9. Dependencies
+      10. Recommendation
+
+      Do not modify source code.
+      Do not create Jira issues.
+      Do not implement the solution.
+
+      Return a structured Business Analysis suitable for Human-in-the-Loop
+      review and approval.
+    output_schema: ''
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: REQUIREMENTS
+    assistant_id: assistant_2
+    next:
+      state_id: Jira_management
+    task: |-
+      Perform the Requirements phase of the AI-SDLC workflow.
+
+      Use the Business Analysis output and the original user request as input.
+
+      Create detailed, testable software requirements.
+
+      Produce:
+      1. Functional requirements
+      2. Non-functional requirements
+      3. User stories
+      4. Acceptance criteria
+      5. Edge cases
+      6. Dependencies
+      7. Assumptions
+      8. Out-of-scope items
+      9. Traceability to the Business Analysis
+
+      Use Given/When/Then format for acceptance criteria where appropriate.
+
+      Do not write application code.
+      Do not create Jira issues.
+
+      The output must be suitable for human review and approval before
+      the workflow proceeds to Jira management.
+    output_schema: |-
+      {
+        "functional_requirements": ["string"],
+        "non_functional_requirements": ["string"],
+        "user_stories": ["string"],
+        "acceptance_criteria": ["string"],
+        "edge_cases": ["string"],
+        "dependencies": ["string"],
+        "assumptions": ["string"],
+        "out_of_scope": ["string"],
+        "traceability": ["string"]
+      }
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: Jira_management
+    assistant_id: assistant_3
+    next:
+      state_id: PLANNING
+    task: |-
+      Execute the Jira Management phase of the AI-SDLC workflow.
+
+      Use the approved requirements from the previous workflow stages.
+
+      Project: SDLC
+
+      1. Inspect the existing Jira project and relevant issues.
+      2. Identify the appropriate existing Epic.
+      3. Search for duplicate Stories before creating anything.
+      4. Reuse existing issues when they already satisfy the approved requirement.
+      5. Create only missing approved Stories and Tasks.
+      6. Include complete descriptions and acceptance criteria.
+      7. Maintain traceability between requirements and Jira issues.
+      8. Verify all created or reused issues after the operation.
+      9. Return the Jira issue keys and whether each issue was created or reused.
+
+      Safety rules:
+      - Never create duplicate issues.
+      - Never delete Jira issues.
+      - Never modify unrelated Jira issues.
+      - Never create work outside the approved requirements.
+      - If requirements are ambiguous, stop and request human approval.
+      - Do not claim an operation succeeded unless Jira confirms it.
+    output_schema: ''
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: PLANNING
+    assistant_id: assistant_4
+    next:
+      state_id: DESIGN
+    task: |-
+      Execute the Planning phase of the AI-SDLC workflow.
+
+      Use the approved requirements and Jira issues produced by previous
+      workflow stages.
+
+      Create an implementation plan that includes:
+
+      1. Technical implementation approach
+      2. Components/files likely to change
+      3. API/backend changes
+      4. UI changes
+      5. Database/data changes, if required
+      6. Test strategy
+      7. Dependencies
+      8. Risks
+      9. Rollback considerations
+      10. Traceability to Jira Stories and acceptance criteria
+
+      Do not modify source code.
+
+      Do not create or modify Jira issues.
+
+      The plan must be specific enough for the Design and Development
+      phases to execute.
+    output_schema: ''
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: DESIGN
+    assistant_id: assistant_5
+    next:
+      state_id: DEVELOPMENT
+    task: |-
+      Execute the Design phase of the AI-SDLC workflow.
+
+      Use the approved requirements, Jira issues, and implementation plan
+      from the previous workflow stages.
+
+      Produce:
+
+      1. High-Level Design (HLD)
+      2. Low-Level Design (LLD)
+      3. Architecture/components affected
+      4. API/interface changes
+      5. Data/model changes
+      6. UI/component changes
+      7. Important design decisions and rationale
+      8. Error-handling considerations
+      9. Security considerations
+      10. Testability considerations
+      11. Traceability to requirements and Jira Stories
+
+      Do not modify source code.
+      Do not create Jira issues.
+
+      The design must be detailed enough for the Development Assistant
+      to implement the approved solution.
+    output_schema: ''
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: DEVELOPMENT
+    assistant_id: assistant_6
+    next:
+      state_id: TESTING
+    task: |-
+      Execute the Development phase of the AI-SDLC workflow.
+
+      Use only the approved Business Analysis, Requirements, Jira issues,
+      Planning output, and Design output.
+
+      Before making any code changes:
+
+      1. Verify that the required requirements are available.
+      2. Verify that the Jira Stories are approved.
+      3. Verify that the implementation plan is available.
+      4. Verify that the design is available and approved.
+      5. Inspect the repository and current branch.
+      6. Implement only the approved scope.
+
+      Implementation rules:
+
+      - Modify only files required for the approved requirements.
+      - Follow the existing project architecture and coding standards.
+      - Add or update automated tests where required.
+      - Do not make unrelated refactoring.
+      - Do not modify unrelated Jira issues.
+      - Do not merge directly into main.
+      - Use a feature branch.
+      - Commit the implementation with a meaningful commit message.
+      - Run the appropriate build and automated tests.
+
+      Return:
+
+      1. Files changed
+      2. Implementation summary
+      3. Tests added/updated
+      4. Build result
+      5. Test result
+      6. Commit SHA
+      7. Branch name
+      8. Pull Request status
+      9. Any blockers
+
+      Never claim an implementation, commit, test, build, or Pull Request
+      exists unless the connected development environment confirms it.
+    output_schema: ''
+    interrupt_before: true
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: TESTING
+    assistant_id: assistant_7
+    next:
+      state_id: CODE_REVIEW
+    task: |-
+      Execute the Testing phase of the AI-SDLC workflow using JUnit and MockMvc.
+
+      Use the approved:
+      - Requirements
+      - Jira acceptance criteria
+      - Implementation plan
+      - Design
+      - Development output
+
+      Testing responsibilities:
+
+      1. Review the implemented changes.
+      2. Map the implementation to the approved acceptance criteria.
+      3. Generate or update JUnit/MockMvc tests for the applicable scenarios.
+      4. Cover controller behavior including:
+         - redirects
+         - validation errors
+         - search criteria
+         - search parameters
+         - pagination parameters
+         - response/model behavior
+      5. Execute the JUnit/MockMvc test suite.
+      6. Validate the results against the approved acceptance criteria.
+      7. Report failures without hiding or bypassing them.
+      8. Do not modify production code merely to make tests pass.
+      9. If an implementation defect is identified, report it to the Development phase.
+
+      Return:
+
+      - Acceptance criteria covered
+      - Test cases created/updated
+      - Test classes/files changed
+      - Test execution command
+      - Passed tests
+      - Failed tests
+      - Failure details
+      - Overall test status
+      - Any blockers
+
+      Never claim that tests were executed unless the execution environment
+      confirms the result.
+    output_schema: ''
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: CODE_REVIEW
+    assistant_id: assistant_8
+    next:
+      condition:
+        expression: result.status == "PASS"
+        then: QUALITY_GATE
+        otherwise: DEVELOPMENT
+      meta_next_state_id: conditional_1
+    task: |-
+      Perform the Code Review phase of the AI-SDLC workflow.
+
+      Review the implementation produced by the Development phase against:
+
+      - Approved requirements
+      - Jira acceptance criteria
+      - Approved implementation plan
+      - Approved design
+      - Automated tests
+      - Build and test results
+
+      Review for:
+
+      1. Functional correctness
+      2. Acceptance-criteria coverage
+      3. Regression risks
+      4. Error handling
+      5. Validation
+      6. Security concerns
+      7. Maintainability
+      8. Test coverage
+      9. Unnecessary or unrelated changes
+      10. Coding standards
+
+      Do not modify the source code.
+
+      Return a structured review containing:
+
+      - Review status: PASS or FAIL
+      - Findings
+      - Severity
+      - Affected files
+      - Acceptance criteria coverage
+      - Test coverage assessment
+      - Regression risks
+      - Required fixes
+      - Recommendation
+
+      If there are critical or high-severity issues, return FAIL.
+
+      Do not claim that tests or builds passed unless confirmed by
+      the execution environment.
+    output_schema: |-
+      {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL"]
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "severity": {
+            "type": "string"
+          },
+          "affected_files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required_fixes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendation": {
+            "type": "string"
+          }
+        },
+        "required": ["status"]
+      }
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: QUALITY_GATE
+    assistant_id: assistant_9
+    next:
+      state_id: FINAL_HUMAN_APPROVAL
+    task: |-
+      Perform the final AI-SDLC Quality Gate evaluation.
+
+      Evaluate the complete implementation using:
+
+      - Approved business requirements
+      - Requirements and acceptance criteria
+      - Jira Stories and Tasks
+      - Approved implementation plan
+      - Approved design
+      - Development results
+      - JUnit/MockMvc test results
+      - Code Review results
+
+      Determine whether the implementation is ready for final human
+      release approval.
+
+      Return:
+
+      - Overall status: PASS or FAIL
+      - Requirements coverage
+      - Acceptance criteria coverage
+      - Test status
+      - Code review status
+      - Known defects
+      - Remaining risks
+      - Release recommendation
+
+      Rules:
+
+      - Return PASS only when the required acceptance criteria are covered,
+        tests have passed, and Code Review has passed.
+      - Return FAIL when a blocking issue remains.
+      - Do not modify source code.
+      - Do not merge code.
+      - Do not claim tests passed unless confirmed by execution results.
+
+      The status MUST be exactly one of:
+      PASS
+      FAIL
+    output_schema: |-
+      {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL"]
+          },
+          "requirements_coverage": {
+            "type": "string"
+          },
+          "acceptance_criteria_coverage": {
+            "type": "string"
+          },
+          "test_status": {
+            "type": "string"
+          },
+          "code_review_status": {
+            "type": "string"
+          },
+          "known_defects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "remaining_risks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "release_recommendation": {
+            "type": "string"
+          }
+        },
+        "required": ["status"]
+      }
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: FINAL_HUMAN_APPROVAL
+    assistant_id: assistant_10
+    next:
+      condition:
+        expression: result.status == "APPROVED"
+        then: JIRA_FINALIZATION
+        otherwise: DEVELOPMENT
+      meta_next_state_id: conditional_3
+    task: |-
+      Act as the final human approval gate for the AI-SDLC workflow.
+
+      Review the complete workflow evidence provided by the previous stages,
+      including:
+
+      - Requirements
+      - Acceptance criteria
+      - Jira information
+      - Planning
+      - Design
+      - Development results
+      - JUnit/MockMvc test results
+      - Code Review
+      - Quality Gate results
+
+      Present a concise release-readiness summary for the human reviewer.
+
+      The human reviewer must explicitly approve or reject the release.
+
+      Do not merge code automatically.
+      Do not modify source code.
+      Do not approve on behalf of the human reviewer.
+
+      If the human approves, return:
+      status = APPROVED
+
+      If the human rejects, return:
+      status = REJECTED
+
+      The status MUST be exactly:
+      APPROVED
+      or
+      REJECTED
+    output_schema: |-
+      {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["APPROVED", "REJECTED"]
+          },
+          "summary": {
+            "type": "string"
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["status"]
+      }
+    interrupt_before: true
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+  - id: JIRA_FINALIZATION
+    assistant_id: assistant_11
+    next:
+      state_id: end
+    task: |-
+      Perform the final Jira and delivery finalization for the AI-SDLC workflow.
+
+      Execute this step only after the final human approval has returned
+      status = APPROVED.
+
+      Use the accumulated workflow context and evidence from:
+
+      - Business Analysis
+      - Requirements
+      - Jira Management
+      - Planning
+      - Design
+      - Development
+      - JUnit/MockMvc testing
+      - Code Review
+      - Quality Gate
+      - Final Human Approval
+
+      Perform the following:
+
+      1. Confirm that final human approval is APPROVED.
+      2. Update the relevant Jira issue with the final delivery status.
+      3. Record the Quality Gate result.
+      4. Record the Code Review result.
+      5. Record the JUnit/MockMvc test result.
+      6. Record the human approval result.
+      7. Add relevant execution evidence to Jira when supported.
+      8. Preserve traceability between the requirement, implementation,
+         test evidence, review and approval.
+      9. Do not modify source code.
+      10. Do not create or claim test results that were not actually executed.
+      11. Do not claim a merge was completed unless the Jira/PR evidence
+          confirms it.
+
+      Return a concise final delivery summary.
+    output_schema: |-
+      {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["FINALIZED", "FAILED"]
+          },
+          "jira_update": {
+            "type": "string"
+          },
+          "test_status": {
+            "type": "string"
+          },
+          "code_review_status": {
+            "type": "string"
+          },
+          "quality_gate_status": {
+            "type": "string"
+          },
+          "human_approval_status": {
+            "type": "string"
+          },
+          "evidence_recorded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "human_approval_status"
+        ]
+      }
+    interrupt_before: false
+    finish_iteration: false
+    resolve_dynamic_values_in_prompt: false
+    result_as_human_message: false
+
+meta_states:
+  - type: assistant
+    position:
+      x: 71.364975418755
+      y: -583.5820063691175
+    is_connected: true
+    selected: false
+    id: BA_ANALYSIS
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: 438.87213084816784
+      y: -580.1863058018243
+    is_connected: true
+    selected: false
+    id: REQUIREMENTS
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: 845.8814021133709
+      y: -564.286023238625
+    is_connected: true
+    selected: false
+    id: Jira_management
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: -592.7725856166744
+      y: -120.72056503148319
+    is_connected: true
+    selected: false
+    id: PLANNING
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: -376.2367598548375
+      y: -209.86999648738964
+    is_connected: true
+    selected: false
+    id: DESIGN
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: -85.93882664513305
+      y: 136.46432109520688
+    is_connected: true
+    selected: false
+    id: DEVELOPMENT
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: 469.8535028722266
+      y: 89.0792706154276
+    is_connected: true
+    selected: false
+    id: TESTING
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: 981.551636837371
+      y: 41.75005518623858
+    is_connected: true
+    selected: false
+    id: CODE_REVIEW
+    measured:
+      width: 256
+      height: 67
+  - id: conditional_1
+    type: conditional
+    position:
+      x: 123.14208932426527
+      y: -361.40353874690675
+    is_connected: true
+    selected: false
+    data:
+      next:
+        condition:
+          expression: result.status == "PASS"
+          then: QUALITY_GATE
+          otherwise: DEVELOPMENT
+    measured:
+      width: 256
+      height: 211
+  - type: assistant
+    position:
+      x: 1603.2507117714335
+      y: -288.7446735802938
+    is_connected: true
+    selected: false
+    id: QUALITY_GATE
+    measured:
+      width: 256
+      height: 67
+  - type: assistant
+    position:
+      x: 1432.9041211871875
+      y: 387.48660747905217
+    is_connected: true
+    selected: false
+    id: FINAL_HUMAN_APPROVAL
+    measured:
+      width: 256
+      height: 67
+  - id: conditional_3
+    type: conditional
+    position:
+      x: 217.7915671432781
+      y: 615.5419782418509
+    is_connected: true
+    selected: false
+    data:
+      next:
+        condition:
+          expression: result.status == "APPROVED"
+          then: JIRA_FINALIZATION
+          otherwise: DEVELOPMENT
+    measured:
+      width: 256
+      height: 211
+  - type: assistant
+    position:
+      x: 745.3620156305739
+      y: 655.2822649914613
+    is_connected: true
+    selected: false
+    id: JIRA_FINALIZATION
+    measured:
+      width: 256
+      height: 67
+  - id: start
+    type: start
+    is_connected: false
+    position:
+      x: -550.9841288312788
+      y: -576.6683593669566
+    measured:
+      width: 256
+      height: 67
+    data: {}
+    selected: false
+  - id: end
+    type: end
+    is_connected: true
+    position:
+      x: 1213.9946543462777
+      y: 661.4984610994634
+    measured:
+      width: 256
+      height: 67
+    data: {}
+    selected: false
